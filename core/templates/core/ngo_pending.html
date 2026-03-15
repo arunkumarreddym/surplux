@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Approval Pending</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f6f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 420px;
+        }
+        h2 { color: #ff9800; }
+        p { color: #555; margin-top: 10px; }
+        .logout {
+            margin-top: 20px;
+            display: inline-block;
+            padding: 10px 18px;
+            background: #e53935;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+        .logout:hover { background: #c62828; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>⏳ NGO Approval Pending</h2>
+        <p>Your registration request has been sent to the admin.</p>
+        <p>Please wait until your NGO is verified.</p>
+        <p>You will be able to claim food after approval.</p>
+        <a href="/logout/" class="logout">Logout</a>
+    </div>
+</body>
+</html>

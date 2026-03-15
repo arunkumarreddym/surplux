@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Food Listings</title>
+
+    <style>
+        body{
+            margin:0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+            color:white;
+        }
+
+        .container{
+            width:80%;
+            margin:60px auto;
+        }
+
+        h1{
+            font-size:40px;
+            margin-bottom:40px;
+        }
+
+        .card{
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+            border-radius:20px;
+            padding:25px;
+            margin-bottom:30px;
+            border:1px solid rgba(255,255,255,0.15);
+            transition:0.3s;
+        }
+
+        .card:hover{
+            transform: translateY(-5px);
+            box-shadow:0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .food-name{
+            font-size:26px;
+            font-weight:bold;
+            margin-bottom:15px;
+        }
+
+        .row{
+            margin:8px 0;
+            font-size:18px;
+            opacity:0.9;
+        }
+
+        .price{
+            color:#00e676;
+            font-weight:bold;
+            font-size:20px;
+        }
+
+        .badge{
+            display:inline-block;
+            padding:6px 14px;
+            border-radius:20px;
+            font-size:14px;
+            margin-top:10px;
+        }
+
+        .fresh{ background:#00c853; }
+        .medium{ background:#ffab00; }
+        .expired{ background:#d50000; }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>🍱 My Food Listings</h1>
+
+    {% for food in foods %}
+    <div class="card">
+        <div class="food-name">{{ food.name }}</div>
+
+        <div class="row">📦 Quantity: {{ food.quantity }}</div>
+        <div class="row price">💰 ₹{{ food.price }}</div>
+        <div class="row">❄ Storage: {{ food.storage }}</div>
+        <div class="row">⏱ Prepared: {{ food.prep_hour }} hrs ago</div>
+        <div class="row">⌛ Shelf Life: {{ food.shelf_life }} hrs left</div>
+
+        {% if food.shelf_life > 12 %}
+            <div class="badge fresh">Fresh</div>
+        {% elif food.shelf_life > 6 %}
+            <div class="badge medium">Use Soon</div>
+        {% else %}
+            <div class="badge expired">Expiring Fast</div>
+        {% endif %}
+    </div>
+    {% endfor %}
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Buyer Dashboard</title>
+
+{% if messages %}
+{% for message in messages %}
+<div style="padding:10px;margin:10px;background:#d4edda;color:#155724;border-radius:6px;">
+{{ message }}
+</div>
+{% endfor %}
+{% endif %}
+
+<style>
+
+body{
+font-family:Arial;
+background:#f5f7fa;
+margin:0;
+padding:0;
+}
+
+.header{
+background:linear-gradient(90deg,#2c7be5,#1a5fd0);
+color:white;
+padding:20px;
+text-align:center;
+}
+
+.section{
+padding:30px;
+}
+
+.section h2{
+margin-bottom:20px;
+color:#333;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+gap:20px;
+}
+
+.card{
+background:white;
+border-radius:12px;
+padding:20px;
+box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+
+.btn{
+display:inline-block;
+padding:12px 16px;
+border-radius:8px;
+text-decoration:none;
+color:white;
+font-size:14px;
+margin-top:10px;
+}
+
+.btn-market{
+background:#28a745;
+}
+
+.btn-market:hover{
+background:#218838;
+}
+
+.btn-logout{
+background:#dc3545;
+}
+
+.btn-logout:hover{
+background:#c82333;
+}
+
+.info{
+font-size:14px;
+color:#555;
+margin-bottom:8px;
+}
+
+.empty{
+background:#fff3cd;
+padding:15px;
+border-radius:10px;
+color:#856404;
+}
+
+.map-box{
+margin-top:10px;
+border-radius:10px;
+overflow:hidden;
+box-shadow:0 2px 8px rgba(0,0,0,0.15);
+}
+
+.footer{
+text-align:center;
+padding:20px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<div class="header">
+<h1>🛒 Buyer Dashboard</h1>
+<p>Manage your food purchases</p>
+</div>
+
+
+
+<!-- MARKETPLACE BUTTON -->
+
+<div class="section">
+
+<div class="card" style="text-align:center">
+
+<h2>Browse Food Marketplace</h2>
+
+<p>Discover surplus food near you and send purchase requests.</p>
+
+<a href="{% url 'marketplace' %}" class="btn btn-market">
+Open Marketplace
+</a>
+
+</div>
+
+</div>
+<p><b>Payment:</b> Cash on Delivery</p>
+
+
+<!-- REQUESTS -->
+
+<div class="section">
+
+<h2>📦 Your Purchase Requests</h2>
+
+{% if requests %}
+
+<div class="grid">
+
+{% for req in requests %}
+
+<div class="card">
+
+<h3>{{ req.food.name }}</h3>
+
+<div class="info">
+<b>Donor:</b> {{ req.food.donor.username }}
+</div>
+
+<div class="info">
+<b>Status:</b> {{ req.status }}
+</div>
+
+
+{% if req.status == "approved" %}
+
+<hr>
+
+<div class="info">
+<b>Pickup Location:</b>
+{{ req.food.donor.profile.location|default:"Not available" }}
+</div>
+
+<div class="info">
+<b>Phone:</b>
+{{ req.food.donor.profile.phone|default:"Not available" }}
+</div>
+
+
+<!-- DISTANCE -->
+
+{% if req.food.donor.profile.location and request.user.profile.location %}
+
+<div class="info">
+
+<b>Distance:</b>
+
+<span class="distance"
+data-donor="{{ req.food.donor.profile.location }}"
+data-buyer="{{ request.user.profile.location }}">
+
+calculating...
+
+</span>
+
+</div>
+
+{% endif %}
+
+
+
+<!-- MAP -->
+
+{% if req.food.donor.profile.location %}
+
+<div class="map-box">
+
+<iframe
+width="100%"
+height="180"
+style="border:0"
+loading="lazy"
+allowfullscreen
+src="https://www.google.com/maps?q={{ req.food.donor.profile.location }}&output=embed">
+</iframe>
+
+</div>
+
+{% endif %}
+
+{% else %}
+
+<div class="info" style="color:#999">
+Pickup details will appear once donor approves.
+</div>
+
+{% endif %}
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% else %}
+
+<div class="empty">
+You have not requested any food yet.
+</div>
+
+{% endif %}
+
+</div>
+
+
+
+<div class="footer">
+
+<a href="/logout/" class="btn btn-logout">
+Logout
+</a>
+
+</div>
+
+
+
+<!-- DISTANCE SCRIPT -->
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAVa0kS3g75IaHvHOu87Pt-qBScnglibV0"></script>
+
+<script>
+
+function calculateDistances(){
+
+const elements = document.querySelectorAll(".distance")
+
+elements.forEach(function(el){
+
+let donor = el.getAttribute("data-donor")
+let buyer = el.getAttribute("data-buyer")
+
+if(!donor || !buyer){
+el.innerText = "Unknown"
+return
+}
+
+let service = new google.maps.DistanceMatrixService()
+
+service.getDistanceMatrix({
+
+origins:[buyer],
+destinations:[donor],
+travelMode:"DRIVING"
+
+},function(response,status){
+
+if(status === "OK"){
+
+let distance = response.rows[0].elements[0].distance.text
+
+el.innerText = distance
+
+}else{
+
+el.innerText = "Unknown"
+
+}
+
+})
+
+})
+
+}
+
+window.onload = calculateDistances
+
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Food Marketplace</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f5f7fa;
+margin:0;
+padding:0;
+}
+
+.header{
+background:linear-gradient(90deg,#2c7be5,#1a5fd0);
+color:white;
+padding:20px;
+text-align:center;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+gap:20px;
+padding:30px;
+}
+
+.card{
+background:white;
+border-radius:12px;
+padding:15px;
+box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+
+.card h3{
+margin:10px 0;
+}
+
+.info{
+font-size:14px;
+color:#555;
+margin-bottom:6px;
+}
+
+.price{
+color:green;
+font-size:18px;
+font-weight:bold;
+}
+
+.btn{
+display:inline-block;
+padding:10px 14px;
+border-radius:8px;
+text-decoration:none;
+color:white;
+margin-top:10px;
+font-size:14px;
+border:none;
+cursor:pointer;
+}
+
+.btn-buy{
+background:#28a745;
+}
+
+.btn-buy:hover{
+background:#218838;
+}
+
+.btn-request{
+background:#ff9800;
+}
+
+.btn-request:hover{
+background:#e68900;
+}
+
+.map-box{
+margin-top:10px;
+border-radius:10px;
+overflow:hidden;
+box-shadow:0 2px 8px rgba(0,0,0,0.15);
+}
+
+.footer{
+text-align:center;
+padding:20px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+<h1>🍽 Food Marketplace</h1>
+<p>Buy surplus food at affordable prices</p>
+</div>
+
+
+<div class="grid">
+
+{% for food in foods %}
+
+<div class="card">
+
+<h3>{{ food.name }}</h3>
+
+<div class="info"><b>Category:</b> {{ food.category }}</div>
+
+<div class="info"><b>Quantity:</b> {{ food.quantity }}</div>
+
+<div class="price">₹{{ food.price }}</div>
+
+<div class="info"><b>Shelf Life:</b> {{ food.shelf_life }} hrs</div>
+
+<hr>
+
+<div class="info"><b>Donor:</b> {{ food.donor.username }}</div>
+
+<div class="info">
+<b>Phone:</b>
+{{ food.donor.profile.phone|default:"Not available" }}
+</div>
+
+<div class="info">
+<b>Pickup Location:</b>
+{{ food.donor.profile.location|default:"Not available" }}
+</div>
+
+
+<!-- DISTANCE -->
+
+{% if food.donor.profile.location and request.user.profile.location %}
+
+<div class="info">
+
+Distance:
+
+<span class="distance"
+data-donor="{{ food.donor.profile.location }}"
+data-buyer="{{ request.user.profile.location }}">
+
+calculating...
+
+</span>
+
+</div>
+
+{% endif %}
+
+
+<!-- MAP -->
+
+{% if food.donor.profile.location %}
+
+<div class="map-box">
+
+<iframe
+width="100%"
+height="180"
+style="border:0"
+loading="lazy"
+allowfullscreen
+src="https://www.google.com/maps?q={{ food.donor.profile.location }}&output=embed">
+</iframe>
+
+</div>
+
+{% endif %}
+
+
+{% if food.status == "available" %}
+
+<a href="{% url 'buy_request' food.id %}" class="btn btn-buy">
+Send Buy Request
+</a>
+
+{% else %}
+
+<div style="color:red;margin-top:10px;">
+Sold
+</div>
+
+{% endif %}
+
+</div>
+
+{% endfor %}
+
+</div>
+
+
+<div class="footer">
+
+<a href="/buyer_dashboard/" class="btn btn-request">
+Back to Dashboard
+</a>
+
+</div>
+
+
+<!-- GOOGLE DISTANCE SCRIPT -->
+
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
+
+<script>
+
+function calculateDistances(){
+
+const elements = document.querySelectorAll(".distance")
+
+elements.forEach(function(el){
+
+let donor = el.getAttribute("data-donor")
+let buyer = el.getAttribute("data-buyer")
+
+if(!donor || !buyer){
+el.innerText = "Unknown"
+return
+}
+
+let service = new google.maps.DistanceMatrixService()
+
+service.getDistanceMatrix({
+
+origins:[buyer],
+destinations:[donor],
+travelMode:"DRIVING"
+
+},function(response,status){
+
+if(status === "OK"){
+
+let distance = response.rows[0].elements[0].distance.text
+
+el.innerText = distance
+
+}else{
+
+el.innerText = "Unknown"
+
+}
+
+})
+
+})
+
+}
+
+window.onload = calculateDistances
+
+</script>
+
+
+</body>
+</html>

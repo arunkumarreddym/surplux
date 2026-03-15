@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IA Surplux — Food Sharing Platform</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+
+body{
+    background: linear-gradient(135deg,#1a3c2e,#0f241b,#e07b39);
+    color:white;
+}
+
+/* NAVBAR */
+.navbar{
+    display:flex;
+    justify-content:space-between;
+    padding:20px 60px;
+    align-items:center;
+}
+.logo{
+    font-size:22px;
+    font-weight:700;
+}
+.nav-links a{
+    color:white;
+    text-decoration:none;
+    margin-left:20px;
+    padding:8px 16px;
+    border-radius:10px;
+    transition:0.3s;
+}
+.signup-btn{
+    background: linear-gradient(90deg,#22c55e,#f59e0b);
+}
+
+/* HERO */
+.hero{
+    text-align:center;
+    padding:120px 20px 80px;
+}
+.hero h1{
+    font-size:48px;
+    margin-bottom:20px;
+}
+.hero p{
+    font-size:18px;
+    color:#d1d5db;
+    margin-bottom:30px;
+}
+.hero-buttons a{
+    text-decoration:none;
+    padding:14px 28px;
+    border-radius:12px;
+    margin:10px;
+    font-weight:600;
+    display:inline-block;
+}
+.primary-btn{
+    background: linear-gradient(90deg,#22c55e,#f59e0b);
+    color:white;
+}
+.secondary-btn{
+    border:1px solid rgba(255,255,255,0.4);
+    color:white;
+}
+
+/* FEATURES */
+.features{
+    display:flex;
+    justify-content:center;
+    gap:30px;
+    padding:60px 20px;
+    flex-wrap:wrap;
+}
+.card{
+    width:280px;
+    padding:30px;
+    border-radius:20px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(15px);
+    border:1px solid rgba(255,255,255,0.15);
+    text-align:center;
+}
+.card h3{
+    margin-bottom:15px;
+}
+.card p{
+    font-size:14px;
+    color:#d1d5db;
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <div class="logo">🌿 IA Surplux</div>
+    <div class="nav-links">
+        <a href="{% url 'login' %}">Login</a>
+        <a href="{% url 'signup' %}" class="signup-btn">Sign Up</a>
+    </div>
+</div>
+
+<!-- HERO SECTION -->
+<div class="hero">
+    <h1>Share Food. Reduce Waste.</h1>
+    <p>Connecting surplus food with people in need using smart AI technology</p>
+
+    <div class="hero-buttons">
+        <a href="{% url 'signup' %}" class="primary-btn">Get Started</a>
+        <a href="{% url 'login' %}" class="secondary-btn">Login</a>
+    </div>
+</div>
+
+
+<!-- FEATURES -->
+<div class="features">
+
+    <div class="card">
+        <h3>🍱 Donate Food</h3>
+        <p>Restaurants, hostels and events can share surplus food easily.</p>
+    </div>
+
+    <div class="card">
+        <h3>🛒 Smart Grocery AI</h3>
+        <p>Upload grocery images and our AI detects expiry automatically.</p>
+    </div>
+
+    <div class="card">
+        <h3>🤝 NGOs & Communities</h3>
+        <p>NGOs and communities can claim food and help reduce hunger.</p>
+    </div>
+
+</div>
+
+</body>
+</html>

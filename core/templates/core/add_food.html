@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Food • Surplux</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <label>Pickup Location</label>
+<input type="text" name="pickup_location" required>
+
+<label>Donor Phone</label>
+<input type="text" name="donor_phone" required>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f2e22, #1a3c2e, #e07b39);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card {
+            width: 95%;
+            max-width: 650px;
+            padding: 35px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(18px);
+            border: 1px solid rgba(255,255,255,0.15);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+            color: white;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            margin-bottom: 18px;
+            border-radius: 10px;
+            border: none;
+            outline: none;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            margin: 10px 0 20px;
+        }
+
+        .range-value {
+            font-size: 13px;
+            opacity: 0.85;
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            color: white;
+            background: linear-gradient(90deg, #1a3c2e, #e07b39);
+            box-shadow: 0 0 15px rgba(224,123,57,0.4);
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(224,123,57,0.6);
+        }
+
+        .back {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 13px;
+        }
+
+        .back a {
+            color: #ffd8b8;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h2>🍱 Add Food Item</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <!-- Food Name -->
+            <label>Food Name</label>
+            <input type="text" name="name" placeholder="Enter food name" required>
+
+            <!-- Price -->
+            <label>Price (₹)</label>
+            <input type="number" name="price" placeholder="Enter price" required>
+
+            <!-- Quantity -->
+            <label>Quantity (servings)</label>
+            <input type="range" name="quantity" min="1" max="50" value="5"
+                   oninput="qtyVal.innerText=this.value">
+            <div class="range-value">Quantity: <b><span id="qtyVal">5</span></b></div>
+            <label>Food Category</label>
+<select name="category" required>
+    <option value="Cooked">🍛 Cooked Food</option>
+    <option value="Bakery">🥖 Bakery Item</option>
+    <option value="Packaged">🥫 Packaged Food</option>
+</select>
+
+            <!-- Storage -->
+            <label>Storage Type</label>
+            <select name="storage" required>
+                <option value="room">Room Temperature</option>
+                <option value="fridge">Fridge</option>
+                <option value="freezer">Freezer</option>
+            </select>
+
+            <!-- Prep Hours -->
+            <label>Prepared How Many Hours Ago?</label>
+            <input type="range" name="prep_hour" min="0" max="48" value="4"
+                   oninput="prepVal.innerText=this.value">
+            <div class="range-value">Prepared: <b><span id="prepVal">4</span></b> hrs ago</div>
+
+            <!-- Temperature -->
+            <label>Current Temperature (°C)</label>
+            <input type="range" name="temp" min="0" max="50" value="25"
+                   oninput="tempVal.innerText=this.value">
+            <div class="range-value">Temperature: <b><span id="tempVal">25</span></b>°C</div>
+
+            <!-- Humidity -->
+            <label>Humidity (%)</label>
+            <input type="range" name="humidity" min="0" max="100" value="50"
+                   oninput="humVal.innerText=this.value">
+            <div class="range-value">Humidity: <b><span id="humVal">50</span></b>%</div>
+
+            <button class="btn" type="submit">🚀 Predict & Add Food</button>
+        </form>
+
+        <div class="back">
+            <a href="{% url 'donor_dashboard' %}">⬅ Back to Dashboard</a>
+        </div>
+    </div>
+
+<script>
+    const qtyVal = document.getElementById('qtyVal');
+    const prepVal = document.getElementById('prepVal');
+    const tempVal = document.getElementById('tempVal');
+    const humVal = document.getElementById('humVal');
+</script>
+
+</body>
+</html>

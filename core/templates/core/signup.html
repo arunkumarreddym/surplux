@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>IA Surplux — Sign Up</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background: linear-gradient(135deg, #1a3c2e 0%, #0f241b 40%, #e07b39 140%);
+}
+
+.card{
+width:400px;
+padding:40px;
+border-radius:20px;
+background: rgba(255,255,255,0.08);
+backdrop-filter: blur(18px);
+border:1px solid rgba(255,255,255,0.18);
+box-shadow: 0 25px 45px rgba(0,0,0,0.25);
+text-align:center;
+color:white;
+}
+
+.logo{
+font-size:38px;
+color:#4ade80;
+margin-bottom:10px;
+text-shadow:0 0 15px rgba(74,222,128,0.7);
+}
+
+.app-name{
+font-size:24px;
+font-weight:700;
+}
+
+.tagline{
+font-size:13px;
+color:#d1d5db;
+margin-bottom:25px;
+}
+
+.input-group{
+position:relative;
+margin-bottom:15px;
+}
+
+.input-group input,
+.input-group select{
+width:100%;
+padding:12px 40px;
+border-radius:12px;
+border:none;
+background:rgba(255,255,255,0.12);
+color:white;
+font-size:14px;
+}
+
+.input-group i{
+position:absolute;
+top:50%;
+left:12px;
+transform:translateY(-50%);
+color:#d1d5db;
+}
+
+.btn{
+width:100%;
+padding:12px;
+border:none;
+border-radius:12px;
+font-size:15px;
+font-weight:600;
+color:white;
+margin-top:10px;
+background: linear-gradient(90deg,#22c55e,#f59e0b);
+box-shadow:0 0 18px rgba(34,197,94,0.5);
+cursor:pointer;
+}
+
+.links{
+margin-top:15px;
+font-size:12px;
+color:#d1d5db;
+}
+
+.links a{
+color:#86efac;
+text-decoration:none;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+<div class="logo">
+<i class="fa-solid fa-leaf"></i>
+</div>
+
+<div class="app-name">
+IA Surplux
+</div>
+
+<div class="tagline">
+Reduce Waste. Share Goodness.
+</div>
+
+
+<form method="POST">
+{% csrf_token %}
+
+<div class="input-group">
+<i class="fa-solid fa-user"></i>
+<input type="text" name="username" placeholder="Username" required>
+</div>
+
+
+<div class="input-group">
+<i class="fa-solid fa-envelope"></i>
+<input type="email" name="email" placeholder="Email" required>
+</div>
+
+
+<div class="input-group">
+<i class="fa-solid fa-lock"></i>
+<input type="password" name="password" placeholder="Password" required>
+</div>
+
+
+<div class="input-group">
+<i class="fa-solid fa-users"></i>
+<select name="role" required>
+<option value="">Select Role</option>
+<option value="donor">Food Donor</option>
+<option value="buyer">Buyer</option>
+<option value="ngo">NGO</option>
+</select>
+</div>
+
+
+<div class="input-group">
+<i class="fa-solid fa-phone"></i>
+<input type="text" name="phone" placeholder="Phone Number" required>
+</div>
+
+
+<div class="input-group">
+<i class="fa-solid fa-location-dot"></i>
+<input id="location-input" type="text" name="location" placeholder="Search your location">
+</div>
+
+
+<button class="btn">
+Create Account
+</button>
+
+</form>
+
+
+<div class="links">
+Already have an account?
+<a href="{% url 'login' %}">Sign In</a>
+</div>
+
+</div>
+
+
+<!-- Google Maps API -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAVa0kS3g75IaHvHOu87Pt-qBScnglibV0&libraries=places"></script>
+
+
+<script>
+
+function initAutocomplete(){
+
+const input=document.getElementById("location-input");
+
+const autocomplete=new google.maps.places.Autocomplete(input);
+
+}
+
+google.maps.event.addDomListener(window,'load',initAutocomplete);
+
+</script>
+
+
+</body>
+</html>

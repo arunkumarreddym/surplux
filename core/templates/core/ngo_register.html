@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>NGO Registration • Surplux</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+        body{
+            min-height:100vh;
+            background:linear-gradient(135deg,#0f2e22,#1a3c2e,#e07b39);
+            display:flex;
+            justify-content:center;
+            align-items:center;
+        }
+        .card{
+            width:95%;
+            max-width:600px;
+            padding:35px;
+            border-radius:20px;
+            background:rgba(255,255,255,0.08);
+            backdrop-filter:blur(18px);
+            border:1px solid rgba(255,255,255,0.15);
+            box-shadow:0 10px 40px rgba(0,0,0,0.4);
+            color:white;
+        }
+        h2{text-align:center;margin-bottom:25px}
+        label{font-size:14px;opacity:.9}
+        input{
+            width:100%;
+            padding:10px;
+            margin-top:6px;
+            margin-bottom:18px;
+            border-radius:10px;
+            border:none;
+            outline:none;
+        }
+        input[type="file"]{
+            background:white;
+            padding:8px;
+        }
+        .btn{
+            width:100%;
+            padding:12px;
+            border-radius:12px;
+            border:none;
+            font-size:15px;
+            font-weight:600;
+            cursor:pointer;
+            color:white;
+            background:linear-gradient(90deg,#1a3c2e,#e07b39);
+            box-shadow:0 0 15px rgba(224,123,57,0.4);
+        }
+        .note{
+            margin-top:15px;
+            font-size:13px;
+            text-align:center;
+            opacity:.8;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h2>🏢 NGO Registration</h2>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <label>Organization Name</label>
+            <input type="text" name="org_name" required>
+
+            <label>Upload Government Certificate</label>
+            <input type="file" name="certificate" required>
+
+            <button class="btn" type="submit">Submit for Verification</button>
+        </form>
+
+        <div class="note">
+            Admin will verify your NGO before approval
+        </div>
+    </div>
+</body>
+</html>

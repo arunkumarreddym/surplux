@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Donor Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+
+body{
+background:linear-gradient(135deg,#0f241b,#1a3c2e,#e07b39);
+min-height:100vh;
+color:white;
+}
+
+.container{
+width:90%;
+max-width:1200px;
+margin:auto;
+padding:60px 0;
+}
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:50px;
+}
+
+.title{
+font-size:32px;
+font-weight:700;
+}
+
+.logout{
+background:linear-gradient(90deg,#22c55e,#f59e0b);
+padding:10px 18px;
+border-radius:12px;
+text-decoration:none;
+color:white;
+font-weight:600;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:30px;
+}
+
+.card{
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(16px);
+border:1px solid rgba(255,255,255,0.15);
+padding:30px 20px;
+border-radius:20px;
+text-align:center;
+color:white;
+transition:0.3s;
+}
+
+.card:hover{
+transform:translateY(-8px);
+background:rgba(255,255,255,0.15);
+}
+
+.icon{
+font-size:40px;
+margin-bottom:15px;
+}
+
+.card h3{
+font-size:18px;
+font-weight:600;
+margin-bottom:10px;
+}
+
+.btn{
+display:inline-block;
+margin-top:10px;
+padding:8px 14px;
+border-radius:10px;
+text-decoration:none;
+color:white;
+font-size:14px;
+}
+
+.btn-approve{
+background:#22c55e;
+}
+
+.btn-reject{
+background:#ef4444;
+}
+
+.section-title{
+margin-top:50px;
+margin-bottom:20px;
+font-size:24px;
+font-weight:600;
+}
+
+.info-card{
+background:rgba(255,255,255,0.08);
+padding:20px;
+border-radius:15px;
+margin-top:20px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+<div class="title">🌿 Donor Dashboard</div>
+<a href="{% url 'logout' %}" class="logout">Logout</a>
+</div>
+
+
+<!-- ACTION CARDS -->
+
+<div class="grid">
+
+    <a href="{% url 'donor_history' %}" class="card">
+<div class="icon">📜</div>
+<h3>Donation History</h3>
+</a>
+<a href="{% url 'add_food' %}" class="card">
+<div class="icon">🍱</div>
+<h3>Add Food</h3>
+</a>
+
+<a href="{% url 'add_grocery' %}" class="card">
+<div class="icon">🛒</div>
+<h3>Add Grocery</h3>
+</a>
+
+<a href="{% url 'my_listings' %}" class="card">
+<div class="icon">📦</div>
+<h3>My Food Listings</h3>
+</a>
+
+<a href="{% url 'grocery_list' %}" class="card">
+<div class="icon">🧺</div>
+<h3>My Grocery Items</h3>
+</a>
+
+</div>
+
+
+<!-- FOOD REQUESTS -->
+
+<div class="section-title">📩 Food Requests</div>
+
+{% if requests %}
+
+<div class="grid">
+
+{% for req in requests %}
+
+<div class="card">
+
+<h3>{{ req.food.name }}</h3>
+
+<p>Quantity: {{ req.food.quantity }}</p>
+
+{% if req.ngo %}
+<p><b>Requested by NGO:</b> {{ req.ngo.username }}</p>
+<p style="color:#22c55e;">Type: Donation</p>
+{% endif %}
+
+{% if req.buyer %}
+<p><b>Requested by Buyer:</b> {{ req.buyer.username }}</p>
+<p style="color:#f59e0b;">Type: Purchase (COD)</p>
+<p>Price: ₹{{ req.food.price }}</p>
+{% endif %}
+
+<a href="{% url 'approve_request' req.id %}" class="btn btn-approve">
+Approve
+</a>
+
+<a href="{% url 'reject_request' req.id %}" class="btn btn-reject">
+Reject
+</a>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% else %}
+
+<p>No food requests yet.</p>
+
+{% endif %}
+
+
+<!-- DONOR INFO -->
+
+<div class="info-card">
+
+<h3>Your Pickup Location</h3>
+
+<p>{{ request.user.profile.location }}</p>
+
+<p>Phone: {{ request.user.profile.phone }}</p>
+
+</div>
+
+
+</div>
+
+</body>
+</html>

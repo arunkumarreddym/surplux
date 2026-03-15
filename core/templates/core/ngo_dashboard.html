@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>NGO Dashboard</title>
+
+{% if messages %}
+{% for message in messages %}
+<div style="padding:10px;margin:10px;background:#d4edda;color:#155724;border-radius:6px;">
+{{ message }}
+</div>
+{% endfor %}
+{% endif %}
+
+<!-- GOOGLE MAPS API -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAVa0kS3g75IaHvHOu87Pt-qBScnglibV0"></script>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f5f7fa;
+margin:0;
+padding:0;
+}
+
+.header{
+background:linear-gradient(90deg,#2c7be5,#1a5fd0);
+color:white;
+padding:20px;
+text-align:center;
+}
+
+.section{
+padding:30px;
+}
+
+.section h2{
+margin-bottom:20px;
+color:#333;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+gap:20px;
+}
+
+.card{
+background:white;
+border-radius:12px;
+padding:15px;
+box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+
+.card img{
+width:100%;
+height:180px;
+object-fit:cover;
+border-radius:10px;
+}
+
+.card h3{
+margin:10px 0;
+}
+
+.info{
+font-size:14px;
+color:#555;
+margin-bottom:6px;
+}
+
+.btn{
+display:inline-block;
+padding:10px 14px;
+border-radius:8px;
+text-decoration:none;
+color:white;
+margin-top:10px;
+font-size:14px;
+}
+
+.btn-claim{
+background:#28a745;
+}
+
+.btn-claim:hover{
+background:#218838;
+}
+
+.btn-request{
+background:#ff9800;
+}
+
+.btn-request:hover{
+background:#e68900;
+}
+
+.btn-logout{
+background:#dc3545;
+}
+
+.btn-logout:hover{
+background:#c82333;
+}
+
+.footer{
+text-align:center;
+padding:20px;
+}
+
+.empty{
+background:#fff3cd;
+padding:15px;
+border-radius:10px;
+color:#856404;
+}
+
+.map-box{
+margin-top:10px;
+border-radius:10px;
+overflow:hidden;
+box-shadow:0 2px 8px rgba(0,0,0,0.15);
+}
+
+#foodMap{
+width:100%;
+height:400px;
+border-radius:12px;
+box-shadow:0 4px 12px rgba(0,0,0,0.2);
+margin-top:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+<h1>🤝 NGO Dashboard</h1>
+<p>Available Resources for Your Organization</p>
+</div>
+
+
+<!-- MAP SECTION -->
+
+<div class="section">
+<h2>🗺 Nearby Food Donors</h2>
+
+<div id="foodMap"></div>
+
+</div>
+
+
+<!-- 🛒 GROCERIES -->
+
+<div class="section">
+
+<h2>🛒 Available Groceries</h2>
+
+{% if groceries %}
+
+<div class="grid">
+
+{% for item in groceries %}
+
+<div class="card">
+
+<img src="{{ item.image.url }}">
+
+<h3>Grocery Item</h3>
+
+<div class="info">Price: ₹{{ item.final_price }}</div>
+<div class="info">Discount: {{ item.discount_percent }}%</div>
+<div class="info">Expires in: {{ item.days_left }} days</div>
+
+<a href="{% url 'claim_grocery' item.id %}" class="btn btn-claim">
+Claim Grocery
+</a>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% else %}
+
+<div class="empty">No groceries available right now.</div>
+
+{% endif %}
+
+</div>
+
+
+<!-- 🍱 FOOD DONATIONS -->
+
+<div class="section">
+
+<h2>🍱 Available Food Donations</h2>
+
+{% if foods %}
+
+<div class="grid">
+
+{% for food in foods %}
+
+<div class="card">
+
+<h3>{{ food.name }}</h3>
+
+<div class="info">Quantity: {{ food.quantity }}</div>
+<div class="info">Shelf Life: {{ food.shelf_life }} hours</div>
+<div class="info">Storage: {{ food.storage }}</div>
+
+<div class="info">
+<strong>Donor:</strong> {{ food.donor.username }}
+</div>
+
+<div class="info">
+<strong>Phone:</strong> {{ food.donor.profile.phone|default:"Not available" }}
+</div>
+
+<div class="info">
+<strong>Pickup Location:</strong>
+{{ food.donor.profile.location|default:"Not available" }}
+</div>
+<div class="info">
+Status:
+{% if food.claims.first.status == "approved" %}
+Approved ✅
+{% else %}
+Available
+{% endif %}
+</div>
+
+<!-- hidden location for map markers -->
+
+<div class="donor-location"
+data-location="{{ food.donor.profile.location }}"
+data-food="{{ food.name }}"
+style="display:none;">
+</div>
+
+
+<!-- DISTANCE -->
+
+{% if food.donor.profile.location and request.user.profile.location %}
+
+<div class="info">
+Distance:
+<span class="distance"
+data-donor="{{ food.donor.profile.location }}"
+data-ngo="{{ request.user.profile.location }}">
+calculating...
+</span>
+</div>
+
+{% else %}
+
+<div class="info">
+Distance: Not available
+</div>
+
+{% endif %}
+
+
+<!-- MAP -->
+
+{% if food.donor.profile.location %}
+
+<div class="map-box">
+
+<iframe
+width="100%"
+height="180"
+style="border:0"
+loading="lazy"
+allowfullscreen
+src="https://www.google.com/maps?q={{ food.donor.profile.location }}&output=embed">
+</iframe>
+
+</div>
+
+{% else %}
+
+<div class="map-box" style="padding:20px;text-align:center;color:#888;">
+Location not provided
+</div>
+
+{% endif %}
+
+<a href="{% url 'request_food' food.id %}" class="btn btn-request">
+Request Food
+</a>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% else %}
+
+<div class="empty">No food donations available right now.</div>
+
+{% endif %}
+
+</div>
+
+
+<div class="footer">
+
+<a href="/logout/" class="btn btn-logout">
+Logout
+</a>
+
+</div>
+
+
+<!-- MAP SCRIPT -->
+
+<script>
+
+function initMap(){
+
+const map = new google.maps.Map(document.getElementById("foodMap"),{
+zoom:10,
+center:{lat:17.3850,lng:78.4867}
+});
+
+const geocoder = new google.maps.Geocoder();
+
+const donors = document.querySelectorAll(".donor-location");
+
+donors.forEach(donor =>{
+
+const address = donor.dataset.location;
+const foodName = donor.dataset.food;
+
+if(!address) return;
+
+geocoder.geocode({address:address}, function(results,status){
+
+if(status === "OK"){
+
+const marker = new google.maps.Marker({
+map:map,
+position:results[0].geometry.location
+});
+
+const info = new google.maps.InfoWindow({
+content:`<b>${foodName}</b><br>${address}`
+});
+
+marker.addListener("click",()=>{
+info.open(map,marker);
+});
+
+}
+
+});
+
+});
+
+}
+
+window.onload = initMap;
+
+</script>
+
+</body>
+</html>
