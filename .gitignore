@@ -1,6 +1,9 @@
-ml/food_model.pkl
+ml/*.pkl
+ml/*.csv
 venv/
 __pycache__/
 *.pyc
 media/
 db.sqlite3
+.env
+staticfiles/

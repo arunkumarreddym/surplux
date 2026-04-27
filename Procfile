@@ -1,0 +1,1 @@
+web: gunicorn surplux_project.wsgi --log-file -
