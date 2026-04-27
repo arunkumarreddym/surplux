@@ -6,7 +6,7 @@ import requests
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ML_DIR = os.path.join(BASE_DIR, "ml")
 
-HF_BASE_URL = "https://huggingface.co/arunkumarreddym/surplux-ml-models/resolve/main"
+HF_BASE_URL = "https://huggingface.co/arunkakdk/surplux-ml-models/resolve/main"
 
 def download_if_missing(filename):
     filepath = os.path.join(ML_DIR, filename)
